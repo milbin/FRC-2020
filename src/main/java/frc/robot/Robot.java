@@ -23,7 +23,9 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PnuematicSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.trajectories.GatherFromTrench;
 import frc.robot.trajectories.TestTrajectory;
+import frc.robot.trajectories.TrenchToShoot;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -48,7 +50,7 @@ public class Robot extends TimedRobot {
 
   public DriverStation ds = DriverStation.getInstance();
   public SmartDashboard sd;
-  public HashMap<String, Trajectory> paths = new HashMap<>();
+  public static HashMap<String, Trajectory> paths = new HashMap<>();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -84,6 +86,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     led.disabled();
+    pneumatics.startCompressor();
   }
 
   @Override
@@ -192,7 +195,10 @@ public class Robot extends TimedRobot {
 
   }
 
-  public void generateTrajectories() {
-    paths.put("Test Path", TestTrajectory.generate());
+  public static void generateTrajectories() {
+    paths.put("Test", TestTrajectory.generate());
+    paths.put("Gather", GatherFromTrench.generate());
+    paths.put("Travel", TrenchToShoot.generate());
+    SmartDashboard.putBoolean("Paths Generated", true);
   }
 }
