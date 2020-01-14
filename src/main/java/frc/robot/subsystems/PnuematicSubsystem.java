@@ -52,14 +52,14 @@ public class PnuematicSubsystem extends SubsystemBase {
   public void moveIntakeDown() {
     if (!isIntakeDown) {
       isIntakeDown = true;
-      intake.set(Value.kForward);
+      intake.set(Value.kForward); // test
     }
   }
 
   public void moveIntakeUp() {
     if (isIntakeDown) {
       isIntakeDown = false;
-      intake.set(Value.kReverse);
+      intake.set(Value.kReverse); // test
     }
   }
 
@@ -94,7 +94,7 @@ public class PnuematicSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("Gate Status:", isGateOpen());
+    SmartDashboard.putBoolean("Gate Status:", isGateOpen()); // light indicator
     SmartDashboard.putBoolean("Arm Status:", isArmDown());
     SmartDashboard.putBoolean("Intake Status:", isIntakeDown());
   }
