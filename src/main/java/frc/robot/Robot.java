@@ -11,12 +11,15 @@ import java.util.HashMap;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.JoystickDrive;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.trajectories.GatherFromTrench;
 import frc.robot.trajectories.TestTrajectory;
 import frc.robot.trajectories.TrenchToShoot;
@@ -30,11 +33,12 @@ import frc.robot.trajectories.TrenchToShoot;
 public class Robot extends TimedRobot {
 
   public static RobotContainer robotContainer;
-  
   public static NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
-
   public Command autoCommand;
+  public static LEDSubsystem led;
+  public static DriveSubsystem drive;
 
+  public DriverStation ds = DriverStation.getInstance();
   public SmartDashboard sd;
   public static HashMap<String, Trajectory> paths = new HashMap<>();
 
@@ -47,6 +51,8 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
+    led = robotContainer.getLED();
+    drive = robotContainer.getDrive();
     generateTrajectories();
   }
 
@@ -75,7 +81,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    robotContainer.led.disabled();
+    led.disabled();
   }
 
   /**
@@ -102,8 +108,8 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.cancel();
     }
-    robotContainer.led.teleopStart();
-    new JoystickDrive(robotContainer.drive);
+    led.teleopStart();
+    new JoystickDrive(drive);
   }
 
   /**
@@ -114,9 +120,9 @@ public class Robot extends TimedRobot {
     // boolean align = robotContainer.driverStick.getAButton();
     // updateLimelightTracking();
 
-    // if (ds.getMatchTime() == 40) {
-    //   led.endgameWarning();
-    // }
+     if (ds.getMatchTime() == 40) {
+       led.endgameWarning();
+    }
     // if (align) {
     //   if (limelightHasTarget) {
     //     drive.drive(limelightThrottle, limelightYaw);

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.AutoAlign;
 import frc.robot.commands.CloseGate;
 import frc.robot.commands.DefaultAutoCommand;
 import frc.robot.subsystems.DriveSubsystem;
@@ -31,18 +32,18 @@ import frc.robot.subsystems.VisionSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  public DriveSubsystem drive = new DriveSubsystem();
-  public PnuematicSubsystem pneumatics = new PnuematicSubsystem();
-  public ShooterSubsystem shooter = new ShooterSubsystem();
-  public LEDSubsystem led = new LEDSubsystem();
-  public IntakeSubsystem intake = new IntakeSubsystem();
-  public VisionSubsystem vision = new VisionSubsystem();
+  private final DriveSubsystem drive = new DriveSubsystem();
+  private final PnuematicSubsystem pneumatics = new PnuematicSubsystem();
+  private final ShooterSubsystem shooter = new ShooterSubsystem();
+  private final LEDSubsystem led = new LEDSubsystem();
+  private final IntakeSubsystem intake = new IntakeSubsystem();
+  private final VisionSubsystem vision = new VisionSubsystem();
 
-  public XboxController driverStick = new XboxController(Constants.DRIVER_CONTROLLER_PORT);
-  public XboxController operatorStick = new XboxController(Constants.OPERATOR_CONTROLLER_PORT);
+  public static XboxController driverStick = new XboxController(Constants.DRIVER_CONTROLLER_PORT);
+  public static XboxController operatorStick = new XboxController(Constants.OPERATOR_CONTROLLER_PORT);
 
 
-  public SendableChooser<Command> autoChooser = new SendableChooser<>();
+  private SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -63,8 +64,16 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(operatorStick, Constants.A_BUTTON).whenPressed(new CloseGate(pneumatics));
+    new JoystickButton(driverStick, Constants.A_BUTTON).whileHeld(new AutoAlign(drive, vision));
   }
 
+  public LEDSubsystem getLED() {
+    return led;
+  }
+
+  public DriveSubsystem getDrive() {
+    return drive;
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -7,38 +7,36 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
-public class JoystickDrive extends CommandBase {
+public class AutoAlign extends CommandBase {
 
   private DriveSubsystem driveSub;
+  private VisionSubsystem visionSub;
 
-  public JoystickDrive(DriveSubsystem drive) {
+  public AutoAlign(DriveSubsystem drive, VisionSubsystem vision) {
     // Use addRequirements() here to declare subsystem dependencies.
     driveSub = drive;
+    visionSub = vision;
     addRequirements(driveSub);
+    addRequirements(visionSub);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    if (!visionSub.hasTarget()) { // do not track if limelight does not have a target
+      cancel();
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double throttle = -RobotContainer.driverStick.getY(Hand.kLeft);
-    double yaw = RobotContainer.driverStick.getX(Hand.kRight);
-    if (yaw < Constants.DEADBAND) {
-      yaw = 0.0;
-    }
-    if (throttle < Constants.DEADBAND) {
-      throttle = 0.0;
-    }
+    double throttle = visionSub.getLimelightThrottle();
+    double yaw = visionSub.getLimelightYaw();
     driveSub.drive(throttle, yaw);
   }
 
@@ -51,6 +49,9 @@ public class JoystickDrive extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (visionSub.isRobotAligned() && visionSub.hasTarget()) {
+      return true;
+    }
     return false;
   }
 }

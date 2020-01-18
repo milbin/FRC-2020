@@ -28,6 +28,20 @@ public class VisionSubsystem extends SubsystemBase {
     tv = limelight.getEntry("tv").getDouble(0.0);
   }
 
+  public void setPipeline(double pipeline) {
+    // 0 for tracking goal
+    // 1 for tracking loading bay
+    limelight.getEntry("pipeline").setNumber(pipeline);
+  }
+
+  public void setLED(double state) {
+    // 0 for mode in pipeline
+    // 1 for force off
+    // 2 for force blink
+    // 3 for force on 
+    limelight.getEntry("ledMode").setNumber(state);
+  }
+
   public double getLimelightThrottle() {
     return limelightThrottle;
   }
