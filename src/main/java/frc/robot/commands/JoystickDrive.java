@@ -11,14 +11,16 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.subsystems.DriveSubsystem;
 
 public class JoystickDrive extends CommandBase {
-  /**
-   * Creates a new JoystickDrive.
-   */
-  public JoystickDrive() {
+
+  private DriveSubsystem driveSub;
+
+  public JoystickDrive(DriveSubsystem drive) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(Robot.drive);
+    driveSub = drive;
+    addRequirements(driveSub);
   }
 
   // Called when the command is initially scheduled.
@@ -37,14 +39,13 @@ public class JoystickDrive extends CommandBase {
     if (throttle < Constants.DEADBAND) {
       throttle = 0.0;
     }
-    Robot.drive.drive(throttle, yaw);
+    driveSub.drive(throttle, yaw);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Robot.drive.stop();
-    Robot.drive.stop();
+    driveSub.stop();
   }
 
   // Returns true when the command should end.

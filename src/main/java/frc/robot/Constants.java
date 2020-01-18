@@ -48,7 +48,7 @@ public final class Constants {
 	public static final int DRIVER_CONTROLLER_PORT = 0;
 	public static final int OPERATOR_CONTROLLER_PORT = 0;
 
-	public static final int BLINKIN_PWM_PORT = 0;
+	public static final int LED_PWM_PORT = 0;
 	public static final double DEADBAND = 0.1;
 
 	public static final double ROTATE_KP = 0.3; // arbitrary
@@ -63,6 +63,8 @@ public final class Constants {
 
 	public static final double SHOOTER_VEL_TOLERANCE = 2.0;
 	public static final double SHOOTER_LEFT_KP = 2.0;
+
+	public static final boolean GYRO_REVERSED = true;
 
 
 	// PATH PLANNING

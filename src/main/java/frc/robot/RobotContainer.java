@@ -15,7 +15,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CloseGate;
 import frc.robot.commands.DefaultAutoCommand;
-import frc.robot.commands.TestAuto;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.PnuematicSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -25,6 +30,13 @@ import frc.robot.commands.TestAuto;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+
+  public DriveSubsystem drive = new DriveSubsystem();
+  public PnuematicSubsystem pneumatics = new PnuematicSubsystem();
+  public ShooterSubsystem shooter = new ShooterSubsystem();
+  public LEDSubsystem led = new LEDSubsystem();
+  public IntakeSubsystem intake = new IntakeSubsystem();
+  public VisionSubsystem vision = new VisionSubsystem();
 
   public XboxController driverStick = new XboxController(Constants.DRIVER_CONTROLLER_PORT);
   public XboxController operatorStick = new XboxController(Constants.OPERATOR_CONTROLLER_PORT);
@@ -38,8 +50,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    autoChooser.addOption("Default", new DefaultAutoCommand());
-    autoChooser.addOption("Test Auto", new TestAuto());
+    autoChooser.addOption("Default", new DefaultAutoCommand(drive));
+    //autoChooser.addOption("Test Auto", new TestAuto());
     SmartDashboard.putData(autoChooser);
   }
 
@@ -50,7 +62,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(operatorStick, Constants.A_BUTTON).whenPressed(new CloseGate());
+    new JoystickButton(operatorStick, Constants.A_BUTTON).whenPressed(new CloseGate(pneumatics));
   }
 
 

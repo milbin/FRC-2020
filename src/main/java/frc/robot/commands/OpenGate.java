@@ -8,15 +8,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
+import frc.robot.subsystems.PnuematicSubsystem;
 
 public class OpenGate extends CommandBase {
-  /**
-   * Creates a new OpenGate.
-   */
-  public OpenGate() {
+
+  private PnuematicSubsystem pneumaticSub;
+  public OpenGate(PnuematicSubsystem pneumatics) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(Robot.pneumatics);
+    pneumaticSub = pneumatics;
+    addRequirements(pneumaticSub);
   }
 
   // Called when the command is initially scheduled.
@@ -27,7 +27,7 @@ public class OpenGate extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Robot.pneumatics.openGate();
+    pneumaticSub.openGate();
   }
 
   // Called once the command ends or is interrupted.

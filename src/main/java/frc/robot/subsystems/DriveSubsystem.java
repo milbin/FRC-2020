@@ -28,6 +28,7 @@ public class DriveSubsystem extends SubsystemBase {
   private CANSparkMax rearLeftDrive = new CANSparkMax(Constants.REAR_LEFT_DRIVE_CAN, MotorType.kBrushless);
   private CANSparkMax frontRightDrive = new CANSparkMax(Constants.FRONT_RIGHT_DRIVE_CAN, MotorType.kBrushless);
   private CANSparkMax rearRightDrive = new CANSparkMax(Constants.REAR_RIGHT_DRIVE_CAN, MotorType.kBrushless);
+  
   private DifferentialDrive drive = new DifferentialDrive(frontLeftDrive, frontRightDrive);
 
   private AHRS navx = new AHRS(SerialPort.Port.kMXP);
@@ -38,8 +39,7 @@ public class DriveSubsystem extends SubsystemBase {
   private DifferentialDriveOdometry odometry;
 
   public DriveSubsystem() {
-    frontRightDrive.setInverted(true);
-    rearRightDrive.setInverted(true);
+    // motors are automatically inverted in the DifferentialDrive class
     rearLeftDrive.follow(frontLeftDrive);
     rearRightDrive.follow(frontRightDrive);
 
@@ -55,30 +55,6 @@ public class DriveSubsystem extends SubsystemBase {
   public void voltageDrive(double leftVolts, double rightVolts) {
     frontLeftDrive.setVoltage(leftVolts);
     frontRightDrive.setVoltage(rightVolts);
-  }
-
-  public void rotateToAngle(double target) {
-    resetEnc();
-    double heading = getHeading();
-    double error = target - heading;
-    while (error > Constants.ANGLE_THRESHOLD) {
-      drive.arcadeDrive(0.0, error * Constants.ROTATE_KP);
-      heading = -navx.getAngle();
-      error = target - heading;
-    }
-    stop();
-  }
-
-  public void driveStraight(double distance) {
-    resetEnc();
-    double currentDistance = (getLeftDistance() + getRightDistance()) / 2.0;
-    if (currentDistance < distance) {
-      double throttleControl = distance - currentDistance;
-      double heading = getHeading();
-      double headingError = 0 - heading;
-      drive.arcadeDrive(throttleControl * Constants.DRIVE_KP, headingError * Constants.ROTATE_KP);
-    }
-    stop();
   }
 
   public Pose2d getPose() {
@@ -115,7 +91,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public double getHeading() {
-    return navx.getAngle() % 360; // check for which rotation is positive*****
+    return Math.IEEEremainder(navx.getAngle(), 360) * (Constants.GYRO_REVERSED ? -1.0 : 1.0);
   }
 
   public double getTurnRate() {

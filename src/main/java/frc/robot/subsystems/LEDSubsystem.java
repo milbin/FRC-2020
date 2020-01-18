@@ -7,39 +7,50 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class LEDSubsystem extends SubsystemBase {
 
-  private Spark blinkin = new Spark(Constants.BLINKIN_PWM_PORT);
+  private AddressableLED led = new AddressableLED(Constants.LED_PWM_PORT);
+  private AddressableLEDBuffer buffer = new AddressableLEDBuffer(40);
+
+  public void init() {
+    led.setLength(buffer.getLength());
+    led.setData(buffer);
+    led.start();
+    disabled();
+  }
 
   public void disabled() {
-    blinkin.set(0.61); // pattern: solid red
+    for (int i = 0; i < buffer.getLength(); i++) { // pattern: solid red
+      buffer.setRGB(i, 255, 0, 0);
+    } 
+    led.setData(buffer);
   }
 
   public void autoRunning() {
-    blinkin.set(-0.09); // pattern: blue strobe
+    for (int i = 0; i < buffer.getLength(); i++) { // pattern: solid blue
+      buffer.setRGB(i, 255, 0, 0);
+    } 
   }
 
   public void teleopStart() {
-    blinkin.set(-0.29); // pattern: blue chase
-    Timer.delay(1.0);
-    blinkin.set(0.0);
+    buffer.setRGB(0, 0, 0, 255);
+    for (int i = 1; i < buffer.getLength(); i++) { // pattern: blue chase
+      buffer.setRGB(i-1, 0, 0, 0);
+      buffer.setRGB(i, 0, 0, 255);
+    } 
   }
 
   public void endgameWarning() {
-    blinkin.set(-0.05); // pattern: white strobe
-    Timer.delay(3.0);
-    blinkin.set(0.0);
+    // pattern: white strobe
   }
 
   public void shooterAligned() {
-    blinkin.set(-0.07); // pattern: gold strobe
-    Timer.delay(0.5);
-    blinkin.set(0.0);
+    // pattern: gold strobe
   }
 
   public void numberOfCells(int numCells) {
@@ -47,6 +58,13 @@ public class LEDSubsystem extends SubsystemBase {
       
     }
 
+  }
+
+  public void off() {
+    for (int i = 0; i < buffer.getLength(); i++) { // pattern: off
+      buffer.setRGB(i, 0, 0, 0);
+    } 
+    led.setData(buffer);
   }
 
   @Override
