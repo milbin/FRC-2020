@@ -42,7 +42,6 @@ public class DriveSubsystem extends SubsystemBase {
     // motors are automatically inverted in the DifferentialDrive class
     rearLeftDrive.follow(frontLeftDrive);
     rearRightDrive.follow(frontRightDrive);
-
     resetEnc();
     zeroHeading();
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
@@ -54,7 +53,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void voltageDrive(double leftVolts, double rightVolts) {
     frontLeftDrive.setVoltage(leftVolts);
-    frontRightDrive.setVoltage(rightVolts);
+    frontRightDrive.setVoltage(-rightVolts);
   }
 
   public Pose2d getPose() {
