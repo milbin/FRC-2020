@@ -54,6 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void voltageDrive(double leftVolts, double rightVolts) {
     frontLeftDrive.setVoltage(leftVolts);
     frontRightDrive.setVoltage(-rightVolts);
+    drive.feed();
   }
 
   public Pose2d getPose() {
