@@ -19,6 +19,8 @@ public class PnuematicSubsystem extends SubsystemBase {
   private Compressor compressor = new Compressor();
 
   private DoubleSolenoid intake = new DoubleSolenoid(Constants.INTAKE_SOLENOID_FORWARD_PORT, Constants.INTAKE_SOLENOID_REVERSE_PORT);
+  private DoubleSolenoid ballRaiseMechanism = new DoubleSolenoid(Constants.BALL_RAISE_SOLENOID_FORWARD_PORT, Constants.BALL_RAISE_SOLENOID_REVERSE_PORT);
+  private Solenoid intakeCover = new Solenoid(Constants.INTAKE_COVER_SOLENOID_PORT);
   private Solenoid gate = new Solenoid(Constants.GATE_SOLENOID_PORT);
   private Solenoid arm = new Solenoid(Constants.ARM_SOLENOID_PORT);
 
